@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>3Dmap</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="./css/index.css">
+    <script src="js/jquery-3.3.1.js"></script>
+    <script src="js/echarts.min.js"></script>
+    <script src="http://echarts.baidu.com/dist/echarts-gl.min.js"></script>
+    <script src="js/province/guangdong.js"></script>
+    <script src="js/china.js"></script>
+    
+
+    <style type="text/css">
+    #next,#pre{
+        position:absolute;
+        top:80px;
+        left:45%;
+        width:auto;
+        height:auto;
+        display:none;
+        z-index:1000;
+    }
+    #main {
+        position:absolute;
+        width:100%;
+        height: 100%;
+
+    }
+    .button {
+        width: 200px;  
+        padding:8px;  
+        background-color: #428bca;  
+        border-color: #357ebd;  
+        color: #fff;  
+        -moz-border-radius: 10px;  
+        -webkit-border-radius: 10px;  
+        border-radius: 10px; /* future proofing */  
+        -khtml-border-radius: 10px; /* for old Konqueror browsers */  
+        text-align: center;  
+        vertical-align: middle;  
+        border: 1px solid transparent;  
+        font-weight: 900;  
+        font-size:125%;
+        border:solid 10px #4d4e53;
+        border-radius:10px 40px 40px 10px;
+    }
+</style>
+
+</head>
+
+<body background="bg.jpg">
+    <div id ="next">
+        <button class="button"type="button" onClick="next_func()">进入  下一级</button>
+    </div>
+    <div id ="pre">
+        <button class="button"type="button" onClick="pre_func()">返回  上一级</button>
+    </div>
+    <div id="main"></div>
+    <script type="text/javascript">
+        // var city=[{name:'珠海市',value:[123,'idc']},{name:'广州市',value:[123,'idc']},{name:'湛江市',value:[123,'idc']},{name:'茂名市',value:[123,'idc']},{name:'阳江市',value:[123,'idc']},{name:'云浮市',value:[123,'idc']},{name:'肇庆市',value:[123,'idc']},{name:'江门市',value:[123,'idc']},{name:'中山市',value:[123,'idc']},{name:'佛山市',value:[123,'idc']},{name:'清远市',value:[123,'idc']},{name:'韶关市',value:[123,'idc']},{name:'河源市',value:[0,'idc']},{name:'梅州市',value:[123,'idc']},{name:'潮州市',value:[255,'idc']},{name:'揭阳市',value:[123,'idc']},{name:'汕头市',value:[123,'idc']},{name:'汕尾市',value:[123,'idc']},{name:'深圳市',value:[123,'idc']},{name:'东莞市',value:[123,'idc']},{name:'惠州市',value:[123,'idc']}];
+        var chart = echarts.init(document.getElementById('main'));
+        var min=0,max=300;
+        var next_pr = 'guangdong';
+        var next_button = document.getElementById("next");
+        var pre_button = document.getElementById("pre");
+        var province = new Map([["安徽省","anhui"],["福建省","fujian"],["甘肃省","gansu"],["广东省","guangdong"],["广西壮族自治区","guangxi"],["贵州省","guizhou"],["海南省","hainan"],["河北省","hebei"],["河南省","henan"],["黑龙江省","heilongjiang"],["吉林省","jilin"],["江苏省","jiangsu"],["湖北省","hubei"],["湖南省","hunan"],["宁夏回族自治区","ningxia"],["江西省","jiangxi"],["辽宁省","liaoning"],["内蒙古自治区","neimeng"],["青海省","qinghai"],["山西省","shanxi"],["陕西省","shanxi1"],["山东省","shandong"],["四川省","sichuan"],["西藏自治区","xizang"],["云南省","yunnan"],["浙江省","zhejiang"],["重庆市","chongqing"],["新疆维吾尔自治区","xinjiang"],["台湾省","taiwan"]]);
+
+        creatChart('china');
+        function creatChart(string){
+            chart.clear();
+
+            var url = './json/'+string+'.json';
+            console.log(url);
+            $.getJSON(url, function (chinaGeoJSON) {
+    
+                echarts.registerMap('china', chinaGeoJSON);
+
+                var regions = chinaGeoJSON.features.map(function (feature) {
+                    return {
+                        name: feature.properties.name,
+                        value: parseInt(Math.random()*(300)),//parseInt(Math.random()*(7)
+                        height: 2
+                    };
+                });
+
+
+                option=({
+                    visualMap: {
+                        show: false,
+                        min: min,
+                        max: max,
+                        inRange: {
+                            color: ['#e0ffff', '#006edd']
+                        },
+                        calculable:true
+
+                    },
+                    series: [{
+                        name:'china',
+                            type: 'map3D',
+                            map: 'china',
+
+                            regionHeight: 2,
+                            boxWidth:70,
+                            //boxHeight:50,
+                            boxDepth:50,
+                            top:'-10%',
+                           //left:'10%',
+
+
+                           label: {
+                                show:true,
+                                formatter:function(params){
+                                    var content='',
+                                    content=params.name;
+                                    return content;
+                                },
+                                textStyle:{
+                                    color:'#EECBAD',
+                                    fontWeight : 'normal',
+                                    fontSize : 5,
+                                    backgroundColor: 'rgba(0,23,11,0)'
+                                },
+
+
+                                emphasis: {//对应的鼠标悬浮效果
+                                    show: true,
+                                    textStyle:{color:"#f00"}
+                                } 
+                            },
+                            itemStyle: {
+
+                                    normal: {
+
+                                        borderWidth: 0.4
+                                    }, //阴影效果
+                                    emphasis: {
+                                        color: 'rgb(255,255,255)'
+                                    }
+                            },
+
+                            viewControl: {
+                                    autoRotate: false,
+                                    distance: 100
+                            },
+
+
+                        data: regions
+                    }]
+                });
+                chart.setOption(option);
+
+            });
+        }
+        
+        
+        
+        chart.on('click', function (params) {
+            var name=params.data.name;
+            var arr = Array();
+            arr = option.series[0].data;
+                
+            params.data.height = 10;
+            //console.log(name);
+            //console.log(arr);
+            for(var i = 0,lens = arr.length;i<lens;i++){
+                if(name==arr[i].name){
+                    if(arr[i].height==2){
+                        option.series[0].data[i].height = 6;
+                        next_button.setAttribute("style","display:inline;");
+                    }else if(arr[i].height==6){
+                        option.series[0].data[i].height = 2;
+                        next_button.setAttribute("style","display:none;");
+                    }
+                    
+                    //console.log(name);
+                }
+            }
+
+            for(var key of province){
+                //console.log(key[0].substr(0,2)+"   "+name);
+                if(key[0].substr(0,2) == name)
+                {
+                    console.log(key[1]);
+                    next_pr = key[1];
+                }
+                
+            }
+
+            chart.setOption(option);
+        });
+
+        function next_func(){
+            
+            //console.log("click");
+            next_button.setAttribute("style","display:none;");
+            pre_button.setAttribute("style","display:inline;");
+            var str = "province/"+next_pr;
+            creatChart(str);
+        }
+
+        function pre_func(){
+            
+            //console.log("click");
+            pre_button.setAttribute("style","display:none;");
+            next_button.setAttribute("style","display:inline;");
+            creatChart("china");
+        }
+        </script>
+    </body>
+    </html>
