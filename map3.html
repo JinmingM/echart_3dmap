@@ -49,7 +49,7 @@
 
 </head>
 
-<body background="bg.jpg">
+<body >
     <div id ="next">
         <button class="button"type="button" onClick="next_func()">进入  下一级</button>
     </div>
@@ -102,12 +102,28 @@
                             map: 'china',
 
                             regionHeight: 2,
-                            boxWidth:70,
-                            //boxHeight:50,
-                            boxDepth:50,
-                            top:'-10%',
-                           //left:'10%',
+                            shading:'realistic',
+                            // realisticMaterial: {
+                            //     metalness: 1,
+                            //     roughness: 0.2,
+                            // },
+                            // boxWidth:70,
 
+                            // boxDepth:50,
+                            // top:'-10%',
+
+                            // 配置为全景贴图
+                            //environment: 'bg.jpg',
+                            // 配置为纯黑色的背景
+                            //environment: '#000',
+                            
+                            environment: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                              offset: 0, color: '#00aaff' // 天空颜色
+                            }, {
+                              offset: 0.7, color: '#ffffff' // 地面颜色
+                            }, {
+                              offset: 1, color: '#998866' // 地面颜色
+                            }], false),
 
                            label: {
                                 show:true,
@@ -142,7 +158,7 @@
 
                             viewControl: {
                                     autoRotate: false,
-                                    distance: 100
+                                    distance: 150
                             },
 
 
@@ -162,8 +178,7 @@
             arr = option.series[0].data;
                 
             params.data.height = 10;
-            //console.log(name);
-            //console.log(arr);
+
             for(var i = 0,lens = arr.length;i<lens;i++){
                 if(name==arr[i].name){
                     if(arr[i].height==2){
@@ -173,13 +188,10 @@
                         option.series[0].data[i].height = 2;
                         next_button.setAttribute("style","display:none;");
                     }
-                    
-                    //console.log(name);
                 }
             }
 
             for(var key of province){
-                //console.log(key[0].substr(0,2)+"   "+name);
                 if(key[0].substr(0,2) == name)
                 {
                     console.log(key[1]);
@@ -192,8 +204,6 @@
         });
 
         function next_func(){
-            
-            //console.log("click");
             next_button.setAttribute("style","display:none;");
             pre_button.setAttribute("style","display:inline;");
             var str = "province/"+next_pr;
@@ -201,10 +211,8 @@
         }
 
         function pre_func(){
-            
-            //console.log("click");
             pre_button.setAttribute("style","display:none;");
-            next_button.setAttribute("style","display:inline;");
+            next_button.setAttribute("style","display:none;");
             creatChart("china");
         }
         </script>
