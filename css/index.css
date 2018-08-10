@@ -1,7 +1,7 @@
 #next,#pre{
     position:absolute;
-    top:80px;
-    left:45%;
+    top:120px;
+    left:43%;
     width:auto;
     height:auto;
     display:none;
@@ -12,6 +12,11 @@
     width:100%;
     height: 100%;
 
+}
+#title {
+    position:absolute;
+    top:20px;
+    width:100%;
 }
 .button {
     width: 200px;  
@@ -25,11 +30,6 @@
     -khtml-border-radius: 10px; /* for old Konqueror browsers */  
     text-align: center;  
     vertical-align: middle;  
-    border: 1px solid transparent;  
-    font-weight: 900;  
-    font-size:125%;
-    border:solid 10px #4d4e53;
-    border-radius:10px 40px 40px 10px;
 }
 
 ::-webkit-scrollbar,body::-webkit-scrollbar,textarea::-webkit-scrollbar {/*滚动条整体样式*/
