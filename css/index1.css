@@ -46,26 +46,32 @@ body,html{
     z-index:999
 }
 #list{
-    width:350px;
-    top: 75px;
+    width:25%;
+    top: 3%;
+    left:10px;
+}
+#list-map{
+    width:25%;
+    height:50%; 
+    top: 40%;
     left:10px;
 }
 #list-chart{
-    width:350px;
-    height:240px; 
-    top: 50%;
-    left:10px;
+    width:22%;
+    height:28%;  
+    top: 65%;
+    right:10px;
 }
 #list-chart1{
-    width:350px;
-    height:240px; 
-    top: 10%;
+    width:22%;
+    height:28%; 
+    top: 3%;
     right:10px;
 }
 #list-chart2{
-    width:350px;
-    height:240px; 
-    top: 50%;
+    width:22%;
+    height:28%; 
+    top: 34%;
     right:10px;
 }
 #list-chart-b{
