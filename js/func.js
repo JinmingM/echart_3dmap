@@ -250,6 +250,21 @@ function next_func(){
     creatChartmap(str);
 
     creatChart(str);
+
+    var temp_list = Array();
+    for(var i=0,lens = ytw_data.citylist.length;i<lens;i++){
+        if(ytw_data.citylist[i].pr == next_pr1){
+            temp_list.push(ytw_data.citylist[i]);
+        }
+    }
+    //console.log(temp_list);
+
+    creatChart1(temp_list,"type2");
+
+    createTable(temp_list,2);
+
+
+
 }
 
 function pre_func(){
@@ -259,9 +274,13 @@ function pre_func(){
     creatChartmap("china");
 
     creatChart("china");
+
+    creatChart1(ytw_temp.prlist,"type1");
+
+    createTable(ytw_data.prlist,1);
 }
 
-function createTable(data){
+function createTable(data,type){
 
     var tableData ="";
     var total = 1;
@@ -286,7 +305,12 @@ function createTable(data){
     for(var i=0;i<data.length;i++){
         tableData+="<tr class=\"tr"+i+"\">";
         tableData+="<td class=\"index\"><span>"+(i+1)+"</span></td>";
-        tableData+="<td class=\"province\">"+data[i].pr+"</td>";
+        if(type == 1){
+            tableData+="<td class=\"province\">"+data[i].pr+"</td>";
+        }else if(type==2){
+            tableData+="<td class=\"province\">"+data[i].city+"</td>";
+        }
+        
         tableData+="<td class=\"station-num\">"+data[i].num+"</td>";
         var temp = (data[i].num/total)*100;
         tableData+="<td class=\"proportion\"><span class=\"txt\" style=\"bottom: 14.2px;\">"+temp.toFixed(2)+"%</span>";
@@ -304,24 +328,39 @@ function creatChart1(list,type,type1){
     var myChart1 = echarts.init(document.getElementById('chart1'));
     var myChart2 = echarts.init(document.getElementById('chart2'));
     var myChartb = echarts.init(document.getElementById('chart3'));
-    myChartb.clear();
+    myChart.clear();
+    myChart1.clear();
+    myChart2.clear();
+    var name = "";
     var dataAxis = Array();
     var data = Array();
     var seriesData = Array();
+    var yMax = 0;
 
     for(var i=0;i<list.length;i++){
-        dataAxis.push(list[i].pr);
+        if(type == "type2"){
+            name = list[i].city;
+        }else if(type == "type1"){
+            name = list[i].pr;
+        }
+        if(list[i].num>yMax){
+            yMax = list[i].num;
+        }
+        dataAxis.push(name);
         data.push(list[i].num);
         if(i<10||type=="type2"){
             seriesData.push({
-                name: list[i].pr,
+                name: name,
                 value: list[i].num
             });
         }
         
     }
 
-    var yMax = 30;
+    yMax = (Math.floor(yMax/10)+1)*10;
+    //console.log(yMax);
+
+    
     var dataShadow = [];
 
     for (var i = 0; i < data.length; i++) {
@@ -482,21 +521,24 @@ function creatChart1(list,type,type1){
         ]
     };
     //console.log(option2);
-    if(type=="type1"){
-        myChart.setOption(option);
-        myChart1.setOption(option1);
-        myChart2.setOption(option2);
+    myChart.setOption(option);
+    myChart1.setOption(option1);
+    myChart2.setOption(option2);
+    // if(type=="type1"){
+    //     myChart.setOption(option);
+    //     myChart1.setOption(option1);
+    //     myChart2.setOption(option2);
         
-    }else if(type=="type2"){
+    // }else if(type=="type2"){
          
-         if(type1==1){
-            myChartb.setOption(option1);
-         }else if(type1==2){
-            myChartb.setOption(option2);
-         }else{
-            myChartb.setOption(option);
-         }
-    }
+    //      if(type1==1){
+    //         myChartb.setOption(option1);
+    //      }else if(type1==2){
+    //         myChartb.setOption(option2);
+    //      }else{
+    //         myChartb.setOption(option);
+    //      }
+    // }
     
     //myChartb.setOption(option);
     // Enable data zoom when user click bar.

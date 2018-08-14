@@ -80,6 +80,8 @@
         var chart = echarts.init(document.getElementById('main'));
         var min=0,max=30;
         var next_pr = 'guangdong';
+        var pre_series;
+        var next_pr1 = "广东省";
         var next_button = document.getElementById("next");
         var pre_button = document.getElementById("pre");
         var province = new Map([["安徽省","anhui"],["福建省","fujian"],["甘肃省","gansu"],["广东省","guangdong"],["广西壮族自治区","guangxi"],["贵州省","guizhou"],["海南省","hainan"],["河北省","hebei"],["河南省","henan"],["黑龙江省","heilongjiang"],["吉林省","jilin"],["江苏省","jiangsu"],["湖北省","hubei"],["湖南省","hunan"],["宁夏回族自治区","ningxia"],["江西省","jiangxi"],["辽宁省","liaoning"],["内蒙古自治区","neimeng"],["青海省","qinghai"],["山西省","shanxi"],["陕西省","shanxi1"],["山东省","shandong"],["四川省","sichuan"],["西藏自治区","xizang"],["云南省","yunnan"],["浙江省","zhejiang"],["重庆市","chongqing"],["新疆维吾尔自治区","xinjiang"],["台湾省","taiwan"]]);
@@ -89,7 +91,7 @@
         creatChart('china');
         
         creatChart1(ytw_temp.prlist,"type1");
-        createTable(ytw_data.prlist);
+        createTable(ytw_data.prlist,1);
 
 
         chart.on('click', function (params) {
@@ -104,10 +106,15 @@
                 if(name==arr[i].name){
                     if(arr[i].height==3){
                         option.series[0].data[i].height = 8;
+                        if(pre_series){
+                            pre_series.height = 3;
+                        }
+                        pre_series = option.series[0].data[i];
                         next_button.setAttribute("style","display:inline;");
                     }else if(arr[i].height==8){
                         option.series[0].data[i].height = 3;
                         next_button.setAttribute("style","display:none;");
+
                     }
                 }
             }
@@ -115,8 +122,9 @@
             for(var key of province){
                 if(key[0].substr(0,2) == name)
                 {
-                    console.log(key[1]);
+                    //console.log(key[1]);
                     next_pr = key[1];
+                    next_pr1 = key[0].substr(0,2);
                 }
                 
             }
